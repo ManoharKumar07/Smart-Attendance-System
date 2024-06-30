@@ -7,6 +7,9 @@ import imutils
 import time
 import csv
 import os
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 
 # Path to the Haar Cascade XML file for face detection
 cascade_path = os.path.join(settings.BASE_DIR, 'app', 'haarcascade_frontalface_default.xml')
@@ -31,14 +34,12 @@ def ensure_dataset_directory():
         os.makedirs(dataset_directory)
 
 # Create your views here.
+@api_view(['GET'])
 def Attendance(request):
-    return HttpResponse("<h1> Attendance System</h1>")
+    student ={"name":"Manohar","rollno":24}
+    return Response(student)
 
-def test(request):
-    data = {
-        "message": "Test System"
-    }
-    return JsonResponse(data)
+
 
 def CreateDataset(request):
     if request.method == 'GET':
