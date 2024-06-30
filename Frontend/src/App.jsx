@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
+import { BrowserRouter, Routes, Router, Route } from "react-router-dom";
+import Home from "./Pages/Home";
+import CreateDataset from "./Pages/CreateDataset";
 
 function App() {
   // const [data, setData] = useState({});
@@ -19,9 +22,14 @@ function App() {
 
   return (
     <>
-      <div className="">
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+        <Routes>
+          <Route path="/createdataset" element={<CreateDataset />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
