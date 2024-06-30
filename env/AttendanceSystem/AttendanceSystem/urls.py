@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.Attendance ,name="Attendance"),
     path('test/',views.test ,name="Attendance"),
+    path('createdataset/',views.CreateDataset),
 ]
