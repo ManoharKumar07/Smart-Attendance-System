@@ -1,21 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import ReactWebcam from "react-webcam";
+import axios from "axios";
 
 const CreateDataset = () => {
   const [name, setName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
   const [cameraOn, setCameraOn] = useState(false);
+  const webcamRef = React.useRef(null);
 
-  // Video constraints for the webcam
   const videoConstraints = {
     width: 640,
     height: 480,
     facingMode: "user",
   };
 
-  // Function to toggle the webcam on and off
   const toggleWebcam = () => {
     setCameraOn((prevState) => !prevState);
+  };
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    sendImageToBackend(imageSrc);
+  }, [webcamRef]);
+
+  const sendImageToBackend = (imageSrc) => {
+    console.log("Sending data to backend:", {
+      name,
+      roll_number: rollNumber,
+      image: imageSrc,
+    });
+
+    axios
+      .post("http://127.0.0.1:8000/api/createdataset/", {
+        name: name,
+        roll_number: rollNumber,
+        image: imageSrc,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error response data:", error.response.data);
+      });
   };
 
   return (
@@ -60,7 +86,14 @@ const CreateDataset = () => {
               screenshotFormat="image/jpeg"
               width={640}
               videoConstraints={videoConstraints}
+              ref={webcamRef}
             />
+            <button
+              onClick={capture}
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+            >
+              Capture Photo
+            </button>
           </div>
         )}
       </div>
