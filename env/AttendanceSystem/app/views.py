@@ -1,6 +1,4 @@
-
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.conf import settings
 import cv2
 import imutils
@@ -9,6 +7,7 @@ import csv
 import os
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 
 
 # Path to the Haar Cascade XML file for face detection
@@ -40,15 +39,15 @@ def Attendance(request):
     return Response(student)
 
 
-
+@api_view(['POST'])
 def CreateDataset(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         # Retrieve data from POST request
-        Name = "manooooo"
-        Roll_Number = 24
+        Name = request.data.get('name')
+        Roll_Number = request.data.get('roll_number')
 
         if not Name:
-            return HttpResponse("Name parameter is missing or empty.")
+            return Response({'error': 'Name or Roll Number parameter is missing or empty.'}, status=status.HTTP_400_BAD_REQUEST) 
 
         # Ensure dataset directory exists
         ensure_dataset_directory()
@@ -98,6 +97,6 @@ def CreateDataset(request):
         cam.release()
         cv2.destroyAllWindows()
 
-        return HttpResponse(f"Dataset creation complete for {Name}")
+        return Response({'message': f'Dataset creation complete for {Name}'}, status=status.HTTP_200_OK)
     else:
-        return HttpResponse("Method not allowed. Use POST request.")
+        return Response({'error': 'Dataset Creation error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
