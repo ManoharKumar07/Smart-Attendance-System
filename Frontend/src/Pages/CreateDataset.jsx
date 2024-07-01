@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import ReactWebcam from "react-webcam";
 import axios from "axios";
 
@@ -6,7 +6,8 @@ const CreateDataset = () => {
   const [name, setName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
   const [cameraOn, setCameraOn] = useState(false);
-  const webcamRef = React.useRef(null);
+  const [imageCount, setImageCount] = useState(null);
+  const webcamRef = useRef(null);
 
   const videoConstraints = {
     width: 640,
@@ -20,10 +21,10 @@ const CreateDataset = () => {
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
-    sendImageToBackend(imageSrc);
-  }, [webcamRef]);
+    sendImageToBackend(name, rollNumber, imageSrc);
+  }, [webcamRef, name, rollNumber]);
 
-  const sendImageToBackend = (imageSrc) => {
+  const sendImageToBackend = (name, rollNumber, imageSrc) => {
     console.log("Sending data to backend:", {
       name,
       roll_number: rollNumber,
@@ -38,8 +39,10 @@ const CreateDataset = () => {
       })
       .then((response) => {
         console.log(response.data);
+        setImageCount(response.data.total_images);
       })
       .catch((error) => {
+        console.error("Error sending image to backend", error);
         console.error("Error response data:", error.response.data);
       });
   };
@@ -97,6 +100,13 @@ const CreateDataset = () => {
           </div>
         )}
       </div>
+      {imageCount !== null && (
+        <div className="mt-4">
+          <p className="text-lg font-medium text-green-600">
+            Total images in dataset: {imageCount}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
