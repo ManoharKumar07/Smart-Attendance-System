@@ -8,6 +8,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
+
+# Face Dataset Creation
+# .................................................................................................................................
 # Directory where datasets will be stored
 dataset_directory = os.path.join(settings.BASE_DIR, 'dataset')
 
@@ -15,6 +18,7 @@ dataset_directory = os.path.join(settings.BASE_DIR, 'dataset')
 def ensure_dataset_directory():
     if not os.path.exists(dataset_directory):
         os.makedirs(dataset_directory)
+
 
 @api_view(['POST'])
 def CreateDataset(request):
@@ -67,3 +71,11 @@ def CreateDataset(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+# ........................................................................................................................................
+
+# Face Recognition
+@api_view(['POST'])
+def DetectFace(request):
+    Name = request.data.get('name')
+    return Response({"message":"Datect Face","Name":{Name}})
