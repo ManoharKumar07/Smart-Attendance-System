@@ -12,6 +12,11 @@ const Home = () => {
           Create Dataset
         </Link>
       </div>
+      <div className="m-40 w-100 ">
+        <Link to={"/takeattendance"} className="p-5 bg-blue-300 ">
+          Take Attendance
+        </Link>
+      </div>
     </div>
   );
 };
