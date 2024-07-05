@@ -5,9 +5,8 @@ import axios from "axios";
 const TakeAttendance = () => {
   const [isWebcamOn, setIsWebcamOn] = useState(false);
   const [detectedName, setDetectedName] = useState("");
+  const [classroomName, setClassroomName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
-  const [className, setClassName] = useState("");
-  const [responseClassName, setResponseClassName] = useState("");
   const webcamRef = useRef(null);
   const videoConstraints = {
     width: 640,
@@ -25,38 +24,37 @@ const TakeAttendance = () => {
             image: imageSrc,
           }
         );
-        const { name, roll_number, class_name } = response.data;
-        setDetectedName(name || "No face detected");
-        setRollNumber(roll_number || "");
-        setResponseClassName(class_name || "");
+        setDetectedName(response.data.name || "No face detected");
+        setRollNumber(response.data.roll_number || "No roll number found");
       } catch (error) {
         console.error("Error sending image to backend:", error);
       }
     }
-  }, []);
+  }, [webcamRef]);
 
   useEffect(() => {
     let intervalId;
     if (isWebcamOn) {
-      intervalId = setInterval(capture, 1000); // Capture an image every 1 second
+      intervalId = setInterval(capture, 500); // Capture an image every 2 seconds
     }
     return () => clearInterval(intervalId);
   }, [isWebcamOn, capture]);
 
-  const toggleWebcam = () => {
-    const nextState = !isWebcamOn; // Capture the next state
-    setIsWebcamOn(nextState); // Update state
-    setDetectedName(""); // Reset detectedName
+  const toggleWebcam = async () => {
+    const nextState = !isWebcamOn;
+    setIsWebcamOn(nextState);
+    setDetectedName("");
     if (nextState) {
-      TrainModel(); // Call TrainModel only if webcam is turned on
+      await TrainModel();
     }
   };
 
   const TrainModel = async () => {
     console.log("TrainModel called");
+    console.log(isWebcamOn);
     try {
       await axios.post("http://127.0.0.1:8000/api/retrainmodel/", {
-        classroom_name: className, // Use className from state
+        classroom_name: classroomName,
       });
       console.log("Model retrained successfully");
     } catch (error) {
@@ -73,8 +71,8 @@ const TakeAttendance = () => {
         </label>
         <input
           type="text"
-          value={className}
-          onChange={(e) => setClassName(e.target.value)}
+          value={classroomName}
+          onChange={(e) => setClassroomName(e.target.value)}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           placeholder="Enter classroom name"
         />
@@ -99,19 +97,16 @@ const TakeAttendance = () => {
         {isWebcamOn ? "Turn Off Webcam" : "Take Attendance"}
       </button>
       {isWebcamOn && (
-        <div className="text-lg font-semibold">
-          <p>
+        <>
+          <div className="text-lg font-semibold">
             Detected Name:{" "}
             <span className="text-green-500">{detectedName}</span>
-          </p>
-          <p>
-            Roll Number: <span className="text-blue-500">{rollNumber}</span>
-          </p>
-          <p>
-            Class Name:{" "}
-            <span className="text-indigo-500">{responseClassName}</span>
-          </p>
-        </div>
+          </div>
+          <div className="text-lg font-semibold">
+            Detected Roll Number:{" "}
+            <span className="text-green-500">{rollNumber}</span>
+          </div>
+        </>
       )}
     </div>
   );
