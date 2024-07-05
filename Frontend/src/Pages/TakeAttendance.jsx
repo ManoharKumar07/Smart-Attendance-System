@@ -5,7 +5,9 @@ import axios from "axios";
 const TakeAttendance = () => {
   const [isWebcamOn, setIsWebcamOn] = useState(false);
   const [detectedName, setDetectedName] = useState("");
-  const [classroomName, setClassroomName] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [className, setClassName] = useState("");
+  const [responseClassName, setResponseClassName] = useState("");
   const webcamRef = useRef(null);
   const videoConstraints = {
     width: 640,
@@ -21,15 +23,17 @@ const TakeAttendance = () => {
           "http://127.0.0.1:8000/api/detectface/",
           {
             image: imageSrc,
-            classroom_name: classroomName,
           }
         );
-        setDetectedName(response.data.name || "No face detected");
+        const { name, roll_number, class_name } = response.data;
+        setDetectedName(name || "No face detected");
+        setRollNumber(roll_number || "");
+        setResponseClassName(class_name || "");
       } catch (error) {
         console.error("Error sending image to backend:", error);
       }
     }
-  }, [webcamRef, classroomName]);
+  }, []);
 
   useEffect(() => {
     let intervalId;
@@ -39,7 +43,7 @@ const TakeAttendance = () => {
     return () => clearInterval(intervalId);
   }, [isWebcamOn, capture]);
 
-  const toggleWebcam = async () => {
+  const toggleWebcam = () => {
     const nextState = !isWebcamOn; // Capture the next state
     setIsWebcamOn(nextState); // Update state
     setDetectedName(""); // Reset detectedName
@@ -50,10 +54,9 @@ const TakeAttendance = () => {
 
   const TrainModel = async () => {
     console.log("TrainModel called");
-    console.log(isWebcamOn);
     try {
       await axios.post("http://127.0.0.1:8000/api/retrainmodel/", {
-        classroom_name: classroomName,
+        classroom_name: className, // Use className from state
       });
       console.log("Model retrained successfully");
     } catch (error) {
@@ -70,8 +73,8 @@ const TakeAttendance = () => {
         </label>
         <input
           type="text"
-          value={classroomName}
-          onChange={(e) => setClassroomName(e.target.value)}
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           placeholder="Enter classroom name"
         />
@@ -97,7 +100,17 @@ const TakeAttendance = () => {
       </button>
       {isWebcamOn && (
         <div className="text-lg font-semibold">
-          Detected Name: <span className="text-green-500">{detectedName}</span>
+          <p>
+            Detected Name:{" "}
+            <span className="text-green-500">{detectedName}</span>
+          </p>
+          <p>
+            Roll Number: <span className="text-blue-500">{rollNumber}</span>
+          </p>
+          <p>
+            Class Name:{" "}
+            <span className="text-indigo-500">{responseClassName}</span>
+          </p>
         </div>
       )}
     </div>

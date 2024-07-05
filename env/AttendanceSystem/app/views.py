@@ -139,6 +139,19 @@ def RetrainModel(request):
 
 
 # Face Recognition
+datasets = 'dataset'
+student_csv = 'student.csv'
+
+# Function to read student details from CSV
+def read_student_details():
+    student_details = {}
+    with open(student_csv, mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            student_details[row['name']] = {'roll_number': row['roll_number'], 'class_name': row['class_name']}
+    return student_details
+
+# Endpoint for face detection and recognition
 @api_view(['POST'])
 def DetectFace(request):
     if request.method == 'POST':
@@ -153,18 +166,40 @@ def DetectFace(request):
             gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
+            detected_faces = []
+
             for (x, y, w, h) in faces:
                 face = gray[y:y + h, x:x + w]
                 face_resize = cv2.resize(face, (130, 100))
 
                 prediction = model.predict(face_resize)
                 if prediction[1] < 800:
-                    name = names[prediction[0]]
-                    return Response({"name": name}, status=status.HTTP_200_OK)
+                    predicted_name = names.get(prediction[0], "Unknown")
+                    student_details = read_student_details()
+                    if predicted_name in student_details:
+                        details = student_details[predicted_name]
+                        detected_faces.append({
+                            "name": predicted_name,
+                            "roll_number": details['roll_number'],
+                            "class_name": details['class_name']
+                        })
+                    else:
+                        detected_faces.append({
+                            "name": predicted_name,
+                            "roll_number": "Unknown",
+                            "class_name": "Unknown"
+                        })
                 else:
-                    return Response({"name": "Unknown"}, status=status.HTTP_200_OK)
+                    detected_faces.append({
+                        "name": "Unknown",
+                        "roll_number": "Unknown",
+                        "class_name": "Unknown"
+                    })
 
-            return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
+            if len(detected_faces) > 0:
+                return Response(detected_faces, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "No faces detected"}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as e:
             print("Error processing request:", str(e))  # Log the error for debugging
