@@ -8,6 +8,7 @@ import numpy as np
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from .face_recognition_model import face_cascade, model, names,train_model
 
 haar_file = 'haarcascade_frontalface_default.xml'
 
@@ -79,38 +80,26 @@ def CreateDataset(request):
 
 # ........................................................................................................................................
 
+ # Retraining the model when Take attedance button is clicked
+names={}
+@api_view(['POST'])
+def RetrainModel(request):
+    global names
+    try:
+        names = train_model()
+        print("Retrained successfully")
+        return Response({'message': 'Model retrained successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print("Error retraining model:", str(e))  # Log the error for debugging
+        return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
 # Face Recognition
 @api_view(['POST'])
 def DetectFace(request):
-    datasets = 'dataset'
     if request.method == 'POST':
         try:
-            # Check if face cascade is present
-            if not face_cascade:
-                return Response({'error': 'Face cascade not found'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            print("face cascade is Present")
-            print('Training...')
-
-            (images, labels, names, id) = ([], [], {}, 0)
-
-            # Load the dataset
-            for (subdirs, dirs, files) in os.walk(datasets):
-                for subdir in dirs:
-                    names[id] = subdir
-                    subjectpath = os.path.join(datasets, subdir)
-                    for filename in os.listdir(subjectpath):
-                        path = subjectpath + '/' + filename
-                        label = id
-                        images.append(cv2.imread(path, 0))
-                        labels.append(int(label))
-                    id += 1
-
-            (images, labels) = [np.array(lis) for lis in [images, labels]]
-            (width, height) = (130, 100)
-            model = cv2.face.LBPHFaceRecognizer_create()
-            model.train(images, labels)
-
             # Decode the base64 image
             image_data = request.data.get('image')
             image_data = image_data.split(",")[1]
@@ -123,7 +112,7 @@ def DetectFace(request):
 
             for (x, y, w, h) in faces:
                 face = gray[y:y + h, x:x + w]
-                face_resize = cv2.resize(face, (width, height))
+                face_resize = cv2.resize(face, (130, 100))
 
                 prediction = model.predict(face_resize)
                 if prediction[1] < 800:
@@ -140,3 +129,6 @@ def DetectFace(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+#................................................................................................................
+

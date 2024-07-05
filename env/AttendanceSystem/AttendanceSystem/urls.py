@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/createdataset/',views.CreateDataset),
     path('api/detectface/',views.DetectFace),
+    path('api/retrainmodel/',views.RetrainModel),
 ]

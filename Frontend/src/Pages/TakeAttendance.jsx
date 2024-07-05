@@ -32,14 +32,29 @@ const TakeAttendance = () => {
   useEffect(() => {
     let intervalId;
     if (isWebcamOn) {
-      intervalId = setInterval(capture, 2000); // Capture an image every 2 seconds
+      intervalId = setInterval(capture, 1000); // Capture an image every 2 seconds
     }
     return () => clearInterval(intervalId);
   }, [isWebcamOn, capture]);
 
-  const toggleWebcam = () => {
-    setIsWebcamOn((prevState) => !prevState);
-    setDetectedName("");
+  const toggleWebcam = async () => {
+    const nextState = !isWebcamOn; // Capture the next state
+    await setIsWebcamOn(nextState); // Update state
+    setDetectedName(""); // Reset detectedName
+    if (nextState) {
+      TrainModel(); // Call TrainModel only if webcam is turned on
+    }
+  };
+
+  const TrainModel = async () => {
+    console.log("TrainModel called");
+    console.log(isWebcamOn);
+    try {
+      await axios.post("http://127.0.0.1:8000/api/retrainmodel/");
+      console.log("Model retrained successfully");
+    } catch (error) {
+      console.error("Error retraining the model:", error);
+    }
   };
 
   return (
