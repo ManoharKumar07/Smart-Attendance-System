@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.conf import settings
+import csv
 import cv2
 import os
 import numpy
@@ -8,11 +9,12 @@ import numpy as np
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .face_recognition_model import face_cascade, model, names,train_model
+from .face_recognition_model import face_cascade, model,train_model
 
 haar_file = 'haarcascade_frontalface_default.xml'
 
 face_cascade = cv2.CascadeClassifier(haar_file)
+
 
 
 # Face Dataset Creation
@@ -20,27 +22,56 @@ face_cascade = cv2.CascadeClassifier(haar_file)
 # Directory where datasets will be stored
 dataset_directory = os.path.join(settings.BASE_DIR, 'dataset')
 
+# Path to student CSV file
+student_csv_path = os.path.join(dataset_directory, 'student.csv')
+
 # Function to ensure dataset directory exists
 def ensure_dataset_directory():
     if not os.path.exists(dataset_directory):
         os.makedirs(dataset_directory)
 
+# Function to ensure student CSV file exists
+def ensure_student_csv():
+    if not os.path.exists(student_csv_path):
+        with open(student_csv_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Name', 'Roll Number', 'Classroom Name'])
+
+# Function to check if a student entry already exists in the CSV file
+def student_exists_in_csv(name, roll_number, classroom_name):
+    if not os.path.exists(student_csv_path):
+        return False
+    with open(student_csv_path, mode='r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row == [name, roll_number, classroom_name]:
+                return True
+    return False
+
+# Function to append student details to the CSV file if not already present
+def append_student_to_csv(name, roll_number, classroom_name):
+    if not student_exists_in_csv(name, roll_number, classroom_name):
+        with open(student_csv_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([name, roll_number, classroom_name])
 
 @api_view(['POST'])
 def CreateDataset(request):
     if request.method == 'POST':
         try:
             # Retrieve data from POST request
-            Name = request.data.get('name')
-            Roll_Number = request.data.get('roll_number')
+            name = request.data.get('name')
+            roll_number = request.data.get('roll_number')
+            classroom_name = request.data.get('classroom_name')
             image_data = request.data.get('image')
 
             # Validate input data
-            if not Name or not Roll_Number or not image_data:
-                return Response({'error': 'Name, Roll Number, or image data is missing or empty.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not name or not roll_number or not classroom_name or not image_data:
+                return Response({'error': 'Name, Roll Number, Classroom Name, or image data is missing or empty.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Trim any extra spaces from the Name
-            Name = Name.strip()
+            # Trim any extra spaces from the Name and Classroom Name
+            name = name.strip()
+            classroom_name = classroom_name.strip()
 
             # Decode the base64 image
             image_data = image_data.split(",")[1]
@@ -51,16 +82,22 @@ def CreateDataset(request):
             # Convert image to grayscale
             gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-            # Ensure dataset directory exists
+            # Ensure dataset directory and CSV file exist
             ensure_dataset_directory()
+            ensure_student_csv()
 
-            # Construct path for the user's dataset
-            user_dataset_path = os.path.join(dataset_directory, Name)
+            # Construct path for the classroom and user's dataset
+            classroom_path = os.path.join(dataset_directory, classroom_name)
+            user_dataset_path = os.path.join(classroom_path, name)
 
             # Create directory if it doesn't exist
+            if not os.path.exists(classroom_path):
+                os.makedirs(classroom_path)
+                print(f"Created classroom directory for {classroom_name}")
+
             if not os.path.exists(user_dataset_path):
                 os.makedirs(user_dataset_path)
-                print(f"Created dataset directory for {Name}")
+                print(f"Created dataset directory for {name}")
 
             # Save the grayscale image
             total_images = len(os.listdir(user_dataset_path))
@@ -69,7 +106,10 @@ def CreateDataset(request):
 
             total_images += 1
 
-            return Response({'message': f'Dataset creation complete for {Name}', 'total_images': total_images}, status=status.HTTP_200_OK)
+            # Append student details to CSV if not already present
+            append_student_to_csv(name, roll_number, classroom_name)
+
+            return Response({'message': f'Dataset creation complete for {name}', 'total_images': total_images}, status=status.HTTP_200_OK)
 
         except Exception as e:
             print("Error processing request:", str(e))  # Log the error for debugging
@@ -77,7 +117,6 @@ def CreateDataset(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 # ........................................................................................................................................
 
  # Retraining the model when Take attedance button is clicked
@@ -85,8 +124,12 @@ names={}
 @api_view(['POST'])
 def RetrainModel(request):
     global names
+    classroom_name = request.data.get('classroom_name')
+    if not classroom_name:
+        return Response({'error': 'Classroom name is missing'}, status=status.HTTP_400_BAD_REQUEST)
+    
     try:
-        names = train_model()
+        names = train_model(classroom_name)
         print("Retrained successfully")
         return Response({'message': 'Model retrained successfully'}, status=status.HTTP_200_OK)
     except Exception as e:

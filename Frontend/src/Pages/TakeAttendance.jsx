@@ -5,6 +5,7 @@ import axios from "axios";
 const TakeAttendance = () => {
   const [isWebcamOn, setIsWebcamOn] = useState(false);
   const [detectedName, setDetectedName] = useState("");
+  const [classroomName, setClassroomName] = useState("");
   const webcamRef = useRef(null);
   const videoConstraints = {
     width: 640,
@@ -20,6 +21,7 @@ const TakeAttendance = () => {
           "http://127.0.0.1:8000/api/detectface/",
           {
             image: imageSrc,
+            classroom_name: classroomName,
           }
         );
         setDetectedName(response.data.name || "No face detected");
@@ -27,19 +29,19 @@ const TakeAttendance = () => {
         console.error("Error sending image to backend:", error);
       }
     }
-  }, [webcamRef]);
+  }, [webcamRef, classroomName]);
 
   useEffect(() => {
     let intervalId;
     if (isWebcamOn) {
-      intervalId = setInterval(capture, 1000); // Capture an image every 2 seconds
+      intervalId = setInterval(capture, 1000); // Capture an image every 1 second
     }
     return () => clearInterval(intervalId);
   }, [isWebcamOn, capture]);
 
   const toggleWebcam = async () => {
     const nextState = !isWebcamOn; // Capture the next state
-    await setIsWebcamOn(nextState); // Update state
+    setIsWebcamOn(nextState); // Update state
     setDetectedName(""); // Reset detectedName
     if (nextState) {
       TrainModel(); // Call TrainModel only if webcam is turned on
@@ -50,7 +52,9 @@ const TakeAttendance = () => {
     console.log("TrainModel called");
     console.log(isWebcamOn);
     try {
-      await axios.post("http://127.0.0.1:8000/api/retrainmodel/");
+      await axios.post("http://127.0.0.1:8000/api/retrainmodel/", {
+        classroom_name: classroomName,
+      });
       console.log("Model retrained successfully");
     } catch (error) {
       console.error("Error retraining the model:", error);
@@ -60,6 +64,18 @@ const TakeAttendance = () => {
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Take Attendance</h1>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Classroom Name
+        </label>
+        <input
+          type="text"
+          value={classroomName}
+          onChange={(e) => setClassroomName(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter classroom name"
+        />
+      </div>
       {isWebcamOn && (
         <div className="mb-4">
           <ReactWebcam

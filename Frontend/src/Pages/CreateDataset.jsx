@@ -5,6 +5,7 @@ import axios from "axios";
 const CreateDataset = () => {
   const [name, setName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
+  const [classroomName, setClassroomName] = useState("");
   const [cameraOn, setCameraOn] = useState(false);
   const [imageCount, setImageCount] = useState(null);
   const webcamRef = useRef(null);
@@ -21,13 +22,14 @@ const CreateDataset = () => {
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
-    sendImageToBackend(name, rollNumber, imageSrc);
-  }, [webcamRef, name, rollNumber]);
+    sendImageToBackend(name, rollNumber, classroomName, imageSrc);
+  }, [webcamRef, name, rollNumber, classroomName]);
 
-  const sendImageToBackend = (name, rollNumber, imageSrc) => {
+  const sendImageToBackend = (name, rollNumber, classroomName, imageSrc) => {
     console.log("Sending data to backend:", {
       name,
       roll_number: rollNumber,
+      classroom_name: classroomName,
       image: imageSrc,
     });
 
@@ -35,6 +37,7 @@ const CreateDataset = () => {
       .post("http://127.0.0.1:8000/api/createdataset/", {
         name: name,
         roll_number: rollNumber,
+        classroom_name: classroomName,
         image: imageSrc,
       })
       .then((response) => {
@@ -70,6 +73,18 @@ const CreateDataset = () => {
           onChange={(e) => setRollNumber(e.target.value)}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           placeholder="Enter your roll number"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Classroom Name
+        </label>
+        <input
+          type="text"
+          value={classroomName}
+          onChange={(e) => setClassroomName(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter classroom name"
         />
       </div>
       <div className="mb-4">

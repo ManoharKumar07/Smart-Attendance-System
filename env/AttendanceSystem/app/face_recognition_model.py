@@ -1,3 +1,4 @@
+# face_recognition_model.py
 import cv2
 import numpy as np
 import os
@@ -6,15 +7,16 @@ datasets = 'dataset'
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 model = cv2.face.LBPHFaceRecognizer_create()
 
-def train_model():
-    print("Training model...")
+def train_model(classroom_name):
+    print(f"Training model for classroom: {classroom_name}...")
     (images, labels, names, id) = ([], [], {}, 0)
 
-    # Load the dataset
-    for (subdirs, dirs, files) in os.walk(datasets):
+    # Load the dataset for the specific classroom
+    classroom_path = os.path.join(datasets, classroom_name)
+    for (subdirs, dirs, files) in os.walk(classroom_path):
         for subdir in dirs:
             names[id] = subdir
-            subjectpath = os.path.join(datasets, subdir)
+            subjectpath = os.path.join(classroom_path, subdir)
             for filename in os.listdir(subjectpath):
                 path = subjectpath + '/' + filename
                 label = id
@@ -26,6 +28,3 @@ def train_model():
     model.train(images, labels)
 
     return names
-
-# Train the model once at startup
-names = train_model()
