@@ -118,6 +118,7 @@ def CreateDataset(request):
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # ........................................................................................................................................
+# Training and Detection of Face
 
  # Retraining the model when Take attedance button is clicked
 names={}
@@ -171,18 +172,24 @@ def DetectFace(request):
             gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
+            if len(faces) == 0:
+                return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
+
             for (x, y, w, h) in faces:
                 face = gray[y:y + h, x:x + w]
                 face_resize = cv2.resize(face, (130, 100))
 
                 prediction = model.predict(face_resize)
+                print(f"Prediction: {prediction}")
+
                 if prediction[1] < 800:
                     name = names[prediction[0]]
-                    print(name)
+                    print(f"Predicted Name: {name}")
                     roll_number = get_roll_number(name)
-                    print(roll_number)
-                    return Response({"name": name,"roll_number":roll_number}, status=status.HTTP_200_OK)
+                    print(f"Roll Number: {roll_number}")
+                    return Response({"name": name, "roll_number": roll_number}, status=status.HTTP_200_OK)
                 else:
+                    print("Unknown face detected with high confidence.")
                     return Response({"name": "Unknown"}, status=status.HTTP_200_OK)
 
             return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
@@ -193,5 +200,3 @@ def DetectFace(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-#................................................................................................................
