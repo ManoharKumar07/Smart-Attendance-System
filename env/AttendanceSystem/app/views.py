@@ -3,7 +3,6 @@ from django.conf import settings
 import csv
 import cv2
 import os
-import numpy
 import base64
 import numpy as np
 from rest_framework.response import Response
@@ -35,25 +34,25 @@ def ensure_student_csv():
     if not os.path.exists(student_csv_path):
         with open(student_csv_path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['Name', 'Roll Number', 'Classroom Name'])
+            writer.writerow(['Name', 'Roll Number', 'Classroom Name','Email'])
 
 # Function to check if a student entry already exists in the CSV file
-def student_exists_in_csv(name, roll_number, classroom_name):
+def student_exists_in_csv(name, roll_number, classroom_name,email):
     if not os.path.exists(student_csv_path):
         return False
     with open(student_csv_path, mode='r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row == [name, roll_number, classroom_name]:
+            if row == [name, roll_number, classroom_name, email]:
                 return True
     return False
 
 # Function to append student details to the CSV file if not already present
-def append_student_to_csv(name, roll_number, classroom_name):
-    if not student_exists_in_csv(name, roll_number, classroom_name):
+def append_student_to_csv(name, roll_number, classroom_name, email):
+    if not student_exists_in_csv(name, roll_number, classroom_name, email):
         with open(student_csv_path, mode='a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([name, roll_number, classroom_name])
+            writer.writerow([name, roll_number, classroom_name, email])
 
 @api_view(['POST'])
 def CreateDataset(request):
@@ -63,15 +62,17 @@ def CreateDataset(request):
             name = request.data.get('name')
             roll_number = request.data.get('roll_number')
             classroom_name = request.data.get('classroom_name')
+            email = request.data.get('email')
             image_data = request.data.get('image')
 
             # Validate input data
-            if not name or not roll_number or not classroom_name or not image_data:
-                return Response({'error': 'Name, Roll Number, Classroom Name, or image data is missing or empty.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not name or not roll_number or not classroom_name or not email or not image_data:
+                return Response({'error': 'Name, Roll Number, Classroom Name, Email, or image data is missing or empty.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Trim any extra spaces from the Name and Classroom Name
             name = name.strip()
             classroom_name = classroom_name.strip()
+            email = email.strip()
 
             # Decode the base64 image
             image_data = image_data.split(",")[1]
@@ -107,7 +108,7 @@ def CreateDataset(request):
             total_images += 1
 
             # Append student details to CSV if not already present
-            append_student_to_csv(name, roll_number, classroom_name)
+            append_student_to_csv(name, roll_number, classroom_name, email)
 
             return Response({'message': f'Dataset creation complete for {name}', 'total_images': total_images}, status=status.HTTP_200_OK)
 
@@ -118,7 +119,7 @@ def CreateDataset(request):
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # ........................................................................................................................................
-# Training and Detection of Face
+# Training and Recognition of Face
 
  # Retraining the model when Take attedance button is clicked
 names={}
@@ -137,27 +138,29 @@ def RetrainModel(request):
         print("Error retraining model:", str(e))  # Log the error for debugging
         return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+# ..................................................................................................................................
 
 # Face Recognition
-def get_roll_number(name):
+
+# Function to fetch Roll Number and Email from student.csv
+def get_student_details(name):
     if not os.path.exists(student_csv_path):
-        return None
+        return None, None
     
     try:
         with open(student_csv_path, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 if row['Name'].strip() == name.strip():
-                    return row['Roll Number'].strip()
+                    return row['Roll Number'].strip(), row['Email'].strip()
         
-        return None  # Return None if name not found in CSV
+        return None, None  # Return None if name not found in CSV
     
     except Exception as e:
         print(f"Error reading CSV: {str(e)}")
-        return None
+        return None, None
 
-
+# Recognising Face
 @api_view(['POST'])
 def DetectFace(request):
     if request.method == 'POST':
@@ -176,7 +179,7 @@ def DetectFace(request):
                 return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
 
             for (x, y, w, h) in faces:
-                face = gray[y:y + h, x:x + w]
+                face = gray[y:y + h, x + w]
                 face_resize = cv2.resize(face, (130, 100))
 
                 prediction = model.predict(face_resize)
@@ -185,9 +188,9 @@ def DetectFace(request):
                 if prediction[1] < 800:
                     name = names[prediction[0]]
                     print(f"Predicted Name: {name}")
-                    roll_number = get_roll_number(name)
-                    print(f"Roll Number: {roll_number}")
-                    return Response({"name": name, "roll_number": roll_number}, status=status.HTTP_200_OK)
+                    roll_number, email = get_student_details(name)
+                    print(f"Roll Number: {roll_number}, Email: {email}")
+                    return Response({"name": name, "roll_number": roll_number, "email": email}, status=status.HTTP_200_OK)
                 else:
                     print("Unknown face detected with high confidence.")
                     return Response({"name": "Unknown"}, status=status.HTTP_200_OK)
@@ -200,3 +203,4 @@ def DetectFace(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+

@@ -5,8 +5,9 @@ import axios from "axios";
 const TakeAttendance = () => {
   const [isWebcamOn, setIsWebcamOn] = useState(false);
   const [detectedName, setDetectedName] = useState("");
+  const [detectedRollNumber, setDetectedRollNumber] = useState("");
+  const [detectedEmail, setDetectedEmail] = useState("");
   const [classroomName, setClassroomName] = useState("");
-  const [rollNumber, setRollNumber] = useState("");
   const webcamRef = useRef(null);
   const videoConstraints = {
     width: 640,
@@ -25,7 +26,10 @@ const TakeAttendance = () => {
           }
         );
         setDetectedName(response.data.name || "No face detected");
-        setRollNumber(response.data.roll_number || "No roll number found");
+        setDetectedRollNumber(
+          response.data.roll_number || "No roll number found"
+        );
+        setDetectedEmail(response.data.email || "No email found");
       } catch (error) {
         console.error("Error sending image to backend:", error);
       }
@@ -44,6 +48,8 @@ const TakeAttendance = () => {
     const nextState = !isWebcamOn;
     setIsWebcamOn(nextState);
     setDetectedName("");
+    setDetectedRollNumber("");
+    setDetectedEmail("");
     if (nextState) {
       await TrainModel();
     }
@@ -104,7 +110,11 @@ const TakeAttendance = () => {
           </div>
           <div className="text-lg font-semibold">
             Detected Roll Number:{" "}
-            <span className="text-green-500">{rollNumber}</span>
+            <span className="text-green-500">{detectedRollNumber}</span>
+          </div>
+          <div className="text-lg font-semibold">
+            Detected Email:{" "}
+            <span className="text-green-500">{detectedEmail}</span>
           </div>
         </>
       )}

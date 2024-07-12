@@ -5,6 +5,7 @@ import axios from "axios";
 const CreateDataset = () => {
   const [name, setName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [classroomName, setClassroomName] = useState("");
   const [cameraOn, setCameraOn] = useState(false);
   const [imageCount, setImageCount] = useState(null);
@@ -22,21 +23,29 @@ const CreateDataset = () => {
 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
-    sendImageToBackend(name, rollNumber, classroomName, imageSrc);
-  }, [webcamRef, name, rollNumber, classroomName]);
+    sendImageToBackend(name, rollNumber, email, classroomName, imageSrc);
+  }, [webcamRef, name, rollNumber, email, classroomName]);
 
-  const sendImageToBackend = (name, rollNumber, classroomName, imageSrc) => {
+  const sendImageToBackend = (
+    name,
+    rollNumber,
+    email,
+    classroomName,
+    imageSrc
+  ) => {
     console.log("Sending data to backend:", {
       name,
       roll_number: rollNumber,
+      email,
       classroom_name: classroomName,
       image: imageSrc,
     });
 
     axios
       .post("http://127.0.0.1:8000/api/createdataset/", {
-        name: name,
+        name,
         roll_number: rollNumber,
+        email,
         classroom_name: classroomName,
         image: imageSrc,
       })
@@ -73,6 +82,16 @@ const CreateDataset = () => {
           onChange={(e) => setRollNumber(e.target.value)}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           placeholder="Enter your roll number"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter your email"
         />
       </div>
       <div className="mb-4">
