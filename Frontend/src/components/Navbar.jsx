@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import "../styles/Navbar.css";
+import { useContext } from "react";
+import { usercontext } from "../context/user-context";
 
 export const Navbar = () => {
+  const { user } = useContext(usercontext);
+
   return (
     <>
       <header>
@@ -28,8 +32,12 @@ export const Navbar = () => {
               </li>
             </ul>
           </nav>
-          <div className="lusername">
-            <NavLink to="/">UserName</NavLink>
+          <div className="lusername text-white">
+            {user.name ? (
+              <NavLink to="/">{user.name}</NavLink>
+            ) : (
+              <NavLink to="/">Smart Attendance System</NavLink>
+            )}
           </div>
         </div>
       </header>

@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
+import { usercontext } from "../context/user-context";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useContext(usercontext);
 
-  const [user, setUser] = useState({
+  const [user, setUserState] = useState({
     email: "",
     password: "",
   });
 
   const handleInput = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
+    const { name, value } = e.target;
 
-    setUser({
+    setUserState({
       ...user,
       [name]: value,
     });
@@ -32,10 +33,11 @@ const LoginPage = () => {
       );
 
       if (response.data.success) {
+        setUser({ name: response.data.username, email: user.email }); // Set username in context
         localStorage.setItem("token", response.data.token);
         message.success("Login Successful");
         // Clear the form after successful login
-        setUser({
+        setUserState({
           email: "",
           password: "",
         });

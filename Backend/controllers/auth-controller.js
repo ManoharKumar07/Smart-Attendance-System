@@ -62,6 +62,8 @@ const login = async (req, res) => {
       res.status(200).json({
         message: "Login Successful",
         success: "true",
+        username: user.username,
+        email: user.email,
         //generating token if we get correct usename and password
         token: await jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
           expiresIn: "1d",
