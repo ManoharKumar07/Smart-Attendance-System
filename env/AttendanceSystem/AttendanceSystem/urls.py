@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/createdataset/',views.CreateDataset),
     path('api/detectface/',views.DetectFace),
     path('api/retrainmodel/',views.RetrainModel),
+    path('api/test/',views.test)
 ]

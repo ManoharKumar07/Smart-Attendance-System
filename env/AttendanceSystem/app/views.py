@@ -15,6 +15,10 @@ haar_file = 'haarcascade_frontalface_default.xml'
 face_cascade = cv2.CascadeClassifier(haar_file)
 
 
+@api_view(['GET'])
+def test(req):
+    return Response({'message':"TEst "})
+
 
 # Face Dataset Creation
 # .................................................................................................................................
@@ -133,6 +137,7 @@ def RetrainModel(request):
     try:
         names = train_model(classroom_name)
         print("Retrained successfully")
+        print(names)
         return Response({'message': 'Model retrained successfully'}, status=status.HTTP_200_OK)
     except Exception as e:
         print("Error retraining model:", str(e))  # Log the error for debugging
@@ -184,8 +189,10 @@ def DetectFace(request):
 
                 prediction = model.predict(face_resize)
                 print(f"Prediction: {prediction}")
+                print(prediction[1])
+                print(prediction[0])
 
-                if prediction[1] < 800:
+                if prediction[1] < 200:
                     name = names[prediction[0]]
                     print(f"Predicted Name: {name}")
                     roll_number, email = get_student_details(name)
