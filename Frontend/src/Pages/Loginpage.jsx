@@ -1,14 +1,18 @@
 import { useState } from "react";
+import axios from "axios";
+import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
   const handleInput = (e) => {
-    console.log(e);
     let name = e.target.name;
     let value = e.target.value;
 
@@ -18,57 +22,85 @@ const LoginPage = () => {
     });
   };
 
-  // handle form on submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        user
+      );
+
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        message.success("Login Successful");
+        // Clear the form after successful login
+        setUser({
+          email: "",
+          password: "",
+        });
+        // Navigate to another page upon successful login
+        navigate("/");
+      } else {
+        message.error(
+          response.data.message ||
+            "Login Failed. Please check your credentials."
+        );
+      }
+    } catch (error) {
+      console.error("Error during login:", error.message);
+      message.error("Login Failed. Please try again later.");
+    }
   };
 
   return (
-    <>
-      <section>
-        <main>
-          <div className="section-login">
-            <div className="container grid grid-two-cols">
-              <div className="login-image log-img">
-                <img src="/images/login.png" width="400" height="500" />
-              </div>
-              {/* our main login code  */}
-              <div className="login-form">
-                <h1 className="main-heading mb-3 text-7xl text-white">Login</h1>
+    <section>
+      <main>
+        <div className="section-login">
+          <div className="container grid grid-two-cols">
+            <div className="login-image log-img">
+              <img
+                src="/images/login.png"
+                width="400"
+                height="500"
+                alt="Login"
+              />
+            </div>
+            <div className="login-form">
+              <h1 className="main-heading mb-3 text-7xl text-white">Login</h1>
+              <br />
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={user.email}
+                    onChange={handleInput}
+                    placeholder="Email"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={user.password}
+                    onChange={handleInput}
+                    placeholder="Password"
+                  />
+                </div>
                 <br />
-                <form onSubmit={handleSubmit}>
-                  <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="text"
-                      name="email"
-                      value={user.email}
-                      onChange={handleInput}
-                      placeholder="email"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={user.password}
-                      onChange={handleInput}
-                      placeholder="password"
-                    />
-                  </div>
-                  <br />
-                  <button type="submit" className="btn btn-submit">
-                    Login Now
-                  </button>
-                </form>
-              </div>
+                <button type="submit" className="btn btn-submit">
+                  Login Now
+                </button>
+              </form>
             </div>
           </div>
-        </main>
-      </section>
-    </>
+        </div>
+      </main>
+    </section>
   );
 };
+
 export default LoginPage;

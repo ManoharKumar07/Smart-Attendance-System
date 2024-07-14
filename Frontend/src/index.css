@@ -4,7 +4,6 @@
   box-sizing: border-box;
   font-family: Urbanist, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: light dark;
-  background-color: var(--dark-color);
 }
 
 :root {
@@ -26,6 +25,7 @@ body {
   place-items: center; */
   /* min-width: 32rem; */
   min-height: 100vh;
+  background-color: var(--dark-color);
 }
 
 h1 {
