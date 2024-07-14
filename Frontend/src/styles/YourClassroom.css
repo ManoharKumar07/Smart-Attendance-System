@@ -1,0 +1,46 @@
+.your-classrooms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center; /* Center align cards */
+  margin-top: 3rem;
+}
+
+.your-classrooms h2 {
+  font-size: 3.2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.card {
+  width: calc(31.33% - 1rem); /* Adjust width to fit 3 cards per row */
+  margin-bottom: 20px;
+  background-color: var(--dark-color);
+  color: white; /* Set text color inside cards to white */
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+.card-title {
+  color: white;
+}
+
+.card-content {
+  margin-bottom: 1.5rem;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-actions > button {
+  width: 45%;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

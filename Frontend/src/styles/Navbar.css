@@ -5,11 +5,11 @@
   justify-content: space-between;
 }
 .nav {
-  position: fixed;
+  /* position: fixed;
   left: 0;
-  right: 0;
+  right: 0; */
   background-color: var(--dark-color);
-  height: 5rem;
+  height: 7rem;
 }
 ul {
   display: flex;

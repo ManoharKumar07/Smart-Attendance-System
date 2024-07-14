@@ -29,6 +29,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/createdataset" element={<CreateDataset />} />
             <Route path="/attendance" element={<TakeAttendance />} />
+            {/* ********************************************* */}
             <Route path="/login" element={<Loginpage />} />
             <Route path="/register" element={<Registerpage />} />
             <Route path="/yourclassroom" element={<YourClassroom />} />

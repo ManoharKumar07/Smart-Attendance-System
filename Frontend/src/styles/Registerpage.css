@@ -49,6 +49,8 @@
   padding: 0.8rem;
   border: 1px solid var(--helper-color);
   border-radius: 0.5rem;
+  background-color: var(--dark-color);
+  color: white;
 }
 
 .btn-submit {

@@ -1,51 +1,36 @@
-.section-login {
+.section-createclassroom {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
 }
 
-.grid-two-cols {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  align-items: center;
-}
-
-.login-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-image img {
-  max-width: 100%;
-  height: auto;
-}
-
-.login-form {
+.createclassroom-form {
   padding: 2rem;
+  background: var(--dark-color);
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 50rem;
 }
 
 .main-heading {
   margin-bottom: 2rem;
   font-weight: bold;
+  color: white;
 }
 
-.login-form div {
+.createclassroom-form div {
   margin-bottom: 1.5rem;
 }
 
-.login-form label {
+.createclassroom-form label {
   display: block;
   margin-bottom: 0.5rem;
   color: white;
 }
 
-.login-form input {
-  width: 70%;
+.createclassroom-form input {
+  width: calc(100% - 2rem);
   padding: 0.8rem;
   border: 1px solid var(--helper-color);
   border-radius: 0.5rem;
@@ -65,6 +50,5 @@
 }
 
 .btn-submit:hover {
-  background-color: var(--helper-color);
-  transition: ease-out;
+  background-color: darken(var(--btn-color), 10%);
 }
