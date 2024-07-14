@@ -1,0 +1,68 @@
+.section-registration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.grid-two-cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.registration-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registration-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.registration-form {
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-heading {
+  margin-bottom: 2rem;
+  font-weight: bold; /* Ensure the heading is bold */
+}
+
+.registration-form div {
+  margin-bottom: 1.5rem;
+}
+
+.registration-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: white; /* Change label color to white */
+}
+
+.registration-form input {
+  width: 70%;
+  padding: 0.8rem;
+  border: 1px solid var(--helper-color);
+  border-radius: 0.5rem;
+}
+
+.btn-submit {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--btn-color);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: var(--helper-color);
+  transition: ease-out;
+}

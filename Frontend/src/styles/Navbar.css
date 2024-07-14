@@ -1,0 +1,19 @@
+.container {
+  max-width: 140rem;
+  padding: 4.2rem 2.4rem;
+  display: flex;
+  justify-content: space-between;
+}
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+ul {
+  display: flex;
+  gap: 3.2rem;
+}
+li:hover {
+  color: var(--bg-color);
+  transition: ease-out;
+}
