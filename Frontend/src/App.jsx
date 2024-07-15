@@ -13,6 +13,7 @@ import { Navbar } from "./components/Navbar";
 import Footer from "./components/Footer";
 import { usercontext } from "./context/user-context";
 import { useState } from "react";
+import ClassRoomDetails from "./Pages/ClassRoomDetails";
 
 function App() {
   const [user, setUser] = useState({
@@ -36,6 +37,7 @@ function App() {
             <Route path="/createclassroom" element={<CreateClassroom />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/viewattendance" element={<ViewAttendancepage />} />
+            <Route path="/yourclassroom/:id" element={<ClassRoomDetails />} />
           </Routes>
           <Footer />
         </usercontext.Provider>

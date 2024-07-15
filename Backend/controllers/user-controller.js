@@ -52,4 +52,30 @@ const getclassroom = async (req, res) => {
   }
 };
 
-module.exports = { createclassroom, getclassroom };
+const getclass = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    // Find the classroom by ID
+    const classroom = await Classroom.findById(id);
+
+    if (!classroom) {
+      return res.status(404).json({
+        message: "Classroom not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Classroom fetched successfully",
+      classroom: classroom,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to fetch classroom",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { createclassroom, getclassroom, getclass };

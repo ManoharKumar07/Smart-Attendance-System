@@ -14,7 +14,8 @@
 }
 
 .card {
-  width: calc(31.33% - 1rem); /* Adjust width to fit 3 cards per row */
+  width: 350px; /* Fixed width */
+  height: 400px; /* Fixed height */
   margin-bottom: 20px;
   background-color: var(--dark-color);
   color: white; /* Set text color inside cards to white */
@@ -22,8 +23,9 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
 }
+
 .card-title {
-  color: white;
+  color: var(--btn-color); /* Set custom color for card title */
 }
 
 .card-content {
@@ -37,10 +39,8 @@
 
 .card-actions > button {
   width: 45%;
+  margin-top: 150px;
 }
-
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+.card-title {
+  color: white; /* Set custom color for card title */
 }
