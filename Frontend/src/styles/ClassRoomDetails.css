@@ -1,0 +1,23 @@
+.details-card {
+  width: 50rem;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: var(--dark-color);
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.details-card h2 {
+  font-size: 3.2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 2rem;
+  max-width: 140rem;
+}
+
+.details-card p {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: white; /* Set text color to white */
+}

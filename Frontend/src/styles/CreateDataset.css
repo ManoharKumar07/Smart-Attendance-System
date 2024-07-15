@@ -1,0 +1,82 @@
+.section-create-dataset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin-top: -190px;
+}
+
+.form-container {
+  background: var(--dark-color);
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+}
+
+.form-container div {
+  margin-bottom: 1.5rem;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--helper-color);
+  border-radius: 0.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--btn-color);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: darken(var(--btn-color), 10%);
+}
+
+.webcam-container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.webcam-container video {
+  border-radius: 0.5rem;
+}
+
+.capture-btn {
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  background-color: var(--btn-color);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.capture-btn:hover {
+  background-color: darken(var(--btn-color), 10%);
+}
+
+.image-count {
+  margin-top: 2rem;
+  color: var(--btn-color);
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+input {
+  background-color: var(--dark-color);
+}

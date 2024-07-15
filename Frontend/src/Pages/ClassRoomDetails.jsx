@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/ClassRoomDetails.css";
+import CreateDataset from "../components/CreateDataset";
 
 const ClassRoomDetails = () => {
   const { id } = useParams();
@@ -41,26 +42,31 @@ const ClassRoomDetails = () => {
   }
 
   return (
-    <div className="container">
-      <div className="details-card text-white">
-        <p>
-          <strong>Classname:</strong> {classroom.classname}
-        </p>
-        <p>
-          <strong>Department:</strong> {classroom.department}
-        </p>
-        <p>
-          <strong>Subject:</strong> {classroom.subject}
-        </p>
-        <p>
-          <strong>Created By:</strong> {classroom.createdBy}
-        </p>
-        <p>
-          <strong>Created At:</strong>{" "}
-          {new Date(classroom.createdAt).toLocaleString()}
-        </p>
+    <>
+      <div className="container">
+        <div className="details-card text-white">
+          <p>
+            <strong>Classname:</strong> {classroom.classname}
+          </p>
+          <p>
+            <strong>Department:</strong> {classroom.department}
+          </p>
+          <p>
+            <strong>Subject:</strong> {classroom.subject}
+          </p>
+          <p>
+            <strong>Created By:</strong> {classroom.createdBy}
+          </p>
+          <p>
+            <strong>Created At:</strong>{" "}
+            {new Date(classroom.createdAt).toLocaleString()}
+          </p>
+        </div>
       </div>
-    </div>
+      <div>
+        <CreateDataset classId={id} classname={classroom.classname} />
+      </div>
+    </>
   );
 };
 
