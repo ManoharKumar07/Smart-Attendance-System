@@ -4,6 +4,7 @@
   justify-content: center;
   min-height: 100vh;
   margin-top: -190px;
+  margin-left: 100px;
 }
 
 .form-container {
@@ -79,4 +80,80 @@
 }
 input {
   background-color: var(--dark-color);
+}
+.create-dataset-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.students-list {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--dark-color);
+  height: fit-content;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.students-list h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.students-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.students-list li {
+  margin: 5px 0;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.webcam-container {
+  margin-top: 10px;
+}
+
+.capture-btn {
+  margin-top: 10px;
+}
+.students-list {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--dark-color);
+  color: white;
+  height: fit-content;
+  width: 400px;
+  margin-left: 130px;
+}
+
+.students-list h2 {
+  margin-top: 0;
+  font-size: 3.2em;
+}
+
+.students-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.students-list li {
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
 }

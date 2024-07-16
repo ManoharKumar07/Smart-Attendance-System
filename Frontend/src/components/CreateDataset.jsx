@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import ReactWebcam from "react-webcam";
 import axios from "axios";
 import { message } from "antd";
@@ -11,6 +11,7 @@ const CreateDataset = ({ classId, classname }) => {
   const [cameraOn, setCameraOn] = useState(false);
   const [imageCount, setImageCount] = useState(null);
   const [students, setStudents] = useState([]);
+  const [fetchingStudents, setFetchingStudents] = useState(false); // Track if fetch operation is in progress
   const webcamRef = useRef(null);
 
   const videoConstraints = {
@@ -19,7 +20,38 @@ const CreateDataset = ({ classId, classname }) => {
     facingMode: "user",
   };
 
-  const toggleWebcam = async () => {
+  useEffect(() => {
+    fetchStudents(); // Fetch students when component mounts
+  }, []); // Empty dependency array ensures effect runs once
+
+  const fetchStudents = async () => {
+    try {
+      setFetchingStudents(true); // Set fetching state to true
+
+      const response = await axios.post(
+        "http://localhost:5000/api/user/student/getstudents",
+        {
+          classid: classId,
+        }
+      );
+
+      if (Array.isArray(response.data)) {
+        setStudents(response.data);
+        console.log("Fetched students:", response.data);
+      } else {
+        console.error("Invalid response structure:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching students", error);
+      if (error.response && error.response.data) {
+        console.error("Error response data:", error.response.data);
+      }
+    } finally {
+      setFetchingStudents(false); // Always set fetching state to false, whether successful or not
+    }
+  };
+
+  const toggleWebcam = () => {
     const newCameraState = !cameraOn;
     setCameraOn(newCameraState);
 
@@ -28,28 +60,6 @@ const CreateDataset = ({ classId, classname }) => {
       setName("");
       setRollNumber("");
       setEmail("");
-
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/user/student/getstudents",
-          {
-            classid: classId,
-          }
-        );
-
-        if (Array.isArray(response.data)) {
-          setStudents(response.data);
-          message.success("Fetched students successfully!");
-          console.log("Fetched students:", response.data);
-        } else {
-          console.error("Invalid response structure:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching students", error);
-        if (error.response && error.response.data) {
-          console.error("Error response data:", error.response.data);
-        }
-      }
     }
   };
 
@@ -101,6 +111,9 @@ const CreateDataset = ({ classId, classname }) => {
 
       console.log("Student added:", addStudentResponse.data);
       message.success("Student added successfully!");
+
+      // After adding student, fetch updated list
+      fetchStudents();
     } catch (error) {
       console.error("Error sending data to backend", error);
       if (error.response && error.response.data) {
@@ -110,12 +123,21 @@ const CreateDataset = ({ classId, classname }) => {
   };
 
   return (
-    <div className="section-create-dataset">
+    <div className="create-dataset-container">
+      <div className="students-list">
+        <h2>Students in this class:</h2>
+        <ul>
+          {students.map((student) => (
+            <li key={student._id}>
+              {student.name} - {student.roll_number}
+            </li>
+          ))}
+        </ul>
+        {fetchingStudents && <p>Loading students...</p>}
+      </div>
       <div className="form-container">
         <h1 className="main-heading text-3xl">Create Dataset</h1>
-        <div>
-          {classId} and {classname}
-        </div>
+
         <div>
           <label>Name</label>
           <input
@@ -167,18 +189,6 @@ const CreateDataset = ({ classId, classname }) => {
         {imageCount !== null && (
           <div className="image-count">
             <p>Total images in dataset: {imageCount}</p>
-          </div>
-        )}
-        {students.length > 0 && (
-          <div className="students-list">
-            <h2>Students in this class:</h2>
-            <ul>
-              {students.map((student) => (
-                <li key={student._id}>
-                  {student.name} - {student.roll_number} - {student.email}
-                </li>
-              ))}
-            </ul>
           </div>
         )}
       </div>

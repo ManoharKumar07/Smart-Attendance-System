@@ -54,13 +54,6 @@ const ClassRoomDetails = () => {
           <p>
             <strong>Subject:</strong> {classroom.subject}
           </p>
-          <p>
-            <strong>Created By:</strong> {classroom.createdBy}
-          </p>
-          <p>
-            <strong>Created At:</strong>{" "}
-            {new Date(classroom.createdAt).toLocaleString()}
-          </p>
         </div>
       </div>
       <div>
