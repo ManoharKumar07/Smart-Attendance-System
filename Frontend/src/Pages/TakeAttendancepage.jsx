@@ -24,7 +24,9 @@ const TakeAttendancepage = () => {
           "http://localhost:5000/api/user/getclass",
           { id }
         );
-        setClassroomName(response.data.classroom.classname); // Assuming the response structure is { classroom: { classname } }
+        setClassroomName(response.data.classroom.classname);
+        // Assuming the response structure is { classroom: { classname } }
+        console.log(classroomName);
       } catch (error) {
         console.error("Error fetching classroom:", error.message);
       }
@@ -57,7 +59,7 @@ const TakeAttendancepage = () => {
   useEffect(() => {
     let intervalId;
     if (isWebcamOn) {
-      intervalId = setInterval(capture, 500); // Capture an image every 0.5 seconds
+      intervalId = setInterval(capture, 1000);
     }
     return () => clearInterval(intervalId);
   }, [isWebcamOn, capture]);
@@ -90,7 +92,7 @@ const TakeAttendancepage = () => {
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
-      <h1 className="text-2xl font-bold mb-4">Take Attendance</h1>
+      <h1 className="text-2xl font-bold mb-4 text-white">Take Attendance</h1>
       {isWebcamOn && (
         <div className="mb-4">
           <ReactWebcam
@@ -108,7 +110,7 @@ const TakeAttendancepage = () => {
         onClick={toggleWebcam}
         className="px-4 py-2 mb-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
       >
-        {isWebcamOn ? "Turn Off Webcam" : "Take Attendance"}
+        {isWebcamOn ? "Turn Off Webcam" : "Turn On Cammera"}
       </button>
       {isWebcamOn && (
         <>
@@ -119,10 +121,6 @@ const TakeAttendancepage = () => {
           <div className="text-lg font-semibold">
             Detected Roll Number:{" "}
             <span className="text-green-500">{detectedRollNumber}</span>
-          </div>
-          <div className="text-lg font-semibold">
-            Detected Email:{" "}
-            <span className="text-green-500">{detectedEmail}</span>
           </div>
         </>
       )}

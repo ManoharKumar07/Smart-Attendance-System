@@ -46,7 +46,10 @@ const YourClassroom = () => {
                 <Link>
                   <Button type="primary">View Attendance</Button>
                 </Link>
-                <Link to={`/yourclassroom/takeattendance/${classroom._id}`}>
+                <Link
+                  to={`/yourclassroom/takeattendance/${classroom._id}`}
+                  classname={classroom.classname}
+                >
                   <Button type="primary">Take Attendance</Button>
                 </Link>
               </div>
