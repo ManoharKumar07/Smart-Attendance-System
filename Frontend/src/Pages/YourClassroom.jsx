@@ -43,8 +43,12 @@ const YourClassroom = () => {
                 </p>
               </div>
               <div className="card-actions">
-                <Button type="primary">View Attendance</Button>
-                <Button type="primary">Take Attendance</Button>
+                <Link>
+                  <Button type="primary">View Attendance</Button>
+                </Link>
+                <Link to={`/yourclassroom/takeattendance/${classroom._id}`}>
+                  <Button type="primary">Take Attendance</Button>
+                </Link>
               </div>
             </Card>
           </Link>

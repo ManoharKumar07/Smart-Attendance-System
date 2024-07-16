@@ -14,7 +14,7 @@
 }
 
 .card {
-  width: 350px; /* Fixed width */
+  width: 380px; /* Fixed width */
   height: 400px; /* Fixed height */
   margin-bottom: 20px;
   background-color: var(--dark-color);
@@ -35,10 +35,12 @@
 .card-actions {
   display: flex;
   justify-content: space-between;
+  margin: 70% auto;
+  margin-right: 20px;
 }
 
 .card-actions > button {
-  width: 45%;
+  width: 30%;
   margin-top: 150px;
 }
 .card-title {
