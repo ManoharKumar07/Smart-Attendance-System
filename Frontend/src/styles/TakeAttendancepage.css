@@ -3,26 +3,26 @@
   padding: 10px;
   border-radius: 5px;
   background-color: var(--dark-color);
-  color: white;
   height: fit-content;
-  width: 400px;
-  margin-left: 130px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  margin-left: -50px;
 }
 
 .students-list h2 {
   margin-top: 0;
-  font-size: 3.2em;
+  font-size: 1.2em;
 }
 
 .students-list ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .students-list li {
+  margin: 5px 0;
   padding: 5px;
   border-bottom: 1px solid #ddd;
 }

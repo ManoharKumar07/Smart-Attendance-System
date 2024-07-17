@@ -37,7 +37,10 @@ function App() {
             <Route path="/yourclassroom" element={<YourClassroom />} />
             <Route path="/createclassroom" element={<CreateClassroom />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/viewattendance" element={<ViewAttendancepage />} />
+            <Route
+              path="/viewattendancepage"
+              element={<ViewAttendancepage />}
+            />
             <Route path="/yourclassroom/:id" element={<ClassRoomDetails />} />
             <Route
               path="/yourclassroom/takeattendance/:id"

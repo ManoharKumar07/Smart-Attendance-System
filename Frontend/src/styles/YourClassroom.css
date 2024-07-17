@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: center; /* Center align cards */
+  justify-content: center;
   margin-top: 3rem;
 }
 
@@ -14,18 +14,18 @@
 }
 
 .card {
-  width: 380px; /* Fixed width */
-  height: 400px; /* Fixed height */
+  width: 380px;
+  height: 400px;
   margin-bottom: 20px;
   background-color: var(--dark-color);
-  color: white; /* Set text color inside cards to white */
+  color: white;
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
 }
 
 .card-title {
-  color: var(--btn-color); /* Set custom color for card title */
+  color: var(--btn-color);
 }
 
 .card-content {

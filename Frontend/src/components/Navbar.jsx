@@ -1,10 +1,17 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import { useContext } from "react";
 import { usercontext } from "../context/user-context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export const Navbar = () => {
-  const { user } = useContext(usercontext);
+  const { user, setUser } = useContext(usercontext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser({ name: "", email: "" });
+  };
 
   return (
     <>
@@ -14,30 +21,53 @@ export const Navbar = () => {
             <nav>
               <ul>
                 <li>
-                  <NavLink to="/"> Home </NavLink>
+                  <NavLink to="/" activeClassName="active" exact>
+                    Home
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/yourclassroom"> Your Classroom </NavLink>
+                  <NavLink to="/yourclassroom" activeClassName="active" exact>
+                    Your Classroom
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/createclassroom"> Create Classroom </NavLink>
+                  <NavLink to="/createclassroom" activeClassName="active" exact>
+                    Create Classroom
+                  </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/contact"> Contact </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/register"> Register </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/login"> Login </NavLink>
-                </li>
+
+                {!user.name ? (
+                  <>
+                    <li>
+                      <NavLink to="/login" activeClassName="active" exact>
+                        Login
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/register" activeClassName="active" exact>
+                        Register
+                      </NavLink>
+                    </li>
+                  </>
+                ) : (
+                  <li>
+                    <Link to="/" onClick={handleLogout}>
+                      Logout
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
-            <div className="lusername text-white">
+            <div className="text-white">
               {user.name ? (
-                <NavLink to="/">{user.name}</NavLink>
+                <Link to="/" className="username">
+                  <div>
+                    <FontAwesomeIcon icon={faUser} style={{ color: "white" }} />
+                    {user.name}
+                  </div>
+                </Link>
               ) : (
-                <NavLink to="/">Smart Attendance System</NavLink>
+                <Link to="/">Smart Attendance System</Link>
               )}
             </div>
           </div>

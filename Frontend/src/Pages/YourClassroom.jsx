@@ -27,7 +27,7 @@ const YourClassroom = () => {
 
   return (
     <div className="container">
-      <div className="your-classrooms">
+      <div className="your-classrooms mt-56">
         {classrooms.map((classroom) => (
           <Link to={`/yourclassroom/${classroom._id}`} key={classroom._id}>
             <Card
@@ -42,8 +42,8 @@ const YourClassroom = () => {
                   <strong>Subject:</strong> {classroom.subject}
                 </p>
               </div>
-              <div className="card-actions">
-                <Link>
+              <div className="card-actions space-x-5">
+                <Link to={"/viewattendancepage"}>
                   <Button type="primary">View Attendance</Button>
                 </Link>
                 <Link

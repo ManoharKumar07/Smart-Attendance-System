@@ -10,25 +10,25 @@
   line-height: 1.5;
   font-weight: bold;
   color: white;
-  margin-bottom: 2rem; /* Added margin below the heading */
+  margin-bottom: 2rem;
 }
 
 .home p {
   font-size: 1rem;
   line-height: 2.2rem;
   color: white;
-  margin-bottom: 2rem; /* Added margin below the paragraph */
+  margin-bottom: 2rem;
 }
 
 .button-container {
   display: flex;
-  flex-direction: column; /* Ensure buttons stack vertically */
-  align-items: center; /* Center buttons horizontally */
+  flex-direction: column;
+  align-items: center;
   margin-top: 3rem;
 }
 
 .button-container > div {
-  margin-top: 1.5rem; /* Adjust vertical spacing between buttons */
+  margin-top: 1.5rem;
 }
 
 .button-container a {
@@ -43,4 +43,7 @@
 
 .button-container a:hover {
   background-color: darken(var(--btn-color), 10%);
+}
+.home-content {
+  margin-top: -150px;
 }
