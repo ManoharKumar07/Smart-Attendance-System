@@ -56,9 +56,6 @@ a {
 li {
   list-style: none;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .container {
   max-width: 140rem;
@@ -66,3 +63,7 @@ li {
   margin: 0 auto;
   color: var(--btn-color);
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

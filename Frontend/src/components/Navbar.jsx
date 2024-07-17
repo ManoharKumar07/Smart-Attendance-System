@@ -25,16 +25,29 @@ export const Navbar = () => {
                     Home
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/yourclassroom" activeClassName="active" exact>
-                    Your Classroom
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/createclassroom" activeClassName="active" exact>
-                    Create Classroom
-                  </NavLink>
-                </li>
+
+                {user.name && (
+                  <>
+                    <li>
+                      <NavLink
+                        to="/yourclassroom"
+                        activeClassName="active"
+                        exact
+                      >
+                        Your Classroom
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/createclassroom"
+                        activeClassName="active"
+                        exact
+                      >
+                        Create Classroom
+                      </NavLink>
+                    </li>
+                  </>
+                )}
 
                 {!user.name ? (
                   <>
@@ -63,6 +76,7 @@ export const Navbar = () => {
                 <Link to="/" className="username">
                   <div>
                     <FontAwesomeIcon icon={faUser} style={{ color: "white" }} />
+                    &nbsp;&nbsp;
                     {user.name}
                   </div>
                 </Link>

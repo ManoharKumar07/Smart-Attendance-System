@@ -25,7 +25,7 @@ const Home = () => {
               </div>
               <div className="login-image">
                 <img
-                  src="/images/webdev.png"
+                  src="/images/design.png"
                   width="400"
                   height="500"
                   alt="Login"
