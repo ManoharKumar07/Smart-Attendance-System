@@ -124,7 +124,7 @@ const CreateDataset = ({ classId, classname }) => {
 
   return (
     <div className="create-dataset-container">
-      <div className="students-list">
+      <div className="students-list ml-48">
         <h2>Students in this class:</h2>
         <ul>
           {students.map((student) => (

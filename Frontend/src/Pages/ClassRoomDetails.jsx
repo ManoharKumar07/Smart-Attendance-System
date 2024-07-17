@@ -44,7 +44,7 @@ const ClassRoomDetails = () => {
   return (
     <>
       <div className="container">
-        <div className="details-card text-white">
+        <div className="details-card text-white flex ">
           <p>
             <strong>Classname:</strong> {classroom.classname}
           </p>
