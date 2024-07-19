@@ -1,4 +1,5 @@
 const Classroom = require("../models/classroom-model");
+const Attendance = require("../models/Attendance-model");
 
 const createclassroom = async (req, res) => {
   const { classname, department, subject, createdBy } = req.body;
@@ -25,7 +26,6 @@ const createclassroom = async (req, res) => {
       classroom: newClassroom,
     });
   } catch (error) {
-    // Handle potential errors
     res
       .status(500)
       .json({ message: "Failed to create classroom", error: error.message });
@@ -78,4 +78,34 @@ const getclass = async (req, res) => {
   }
 };
 
-module.exports = { createclassroom, getclassroom, getclass };
+const createattendancereport = async (req, res) => {
+  try {
+    const { classid, attendance, session } = req.body;
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const updatedAttendance = await Attendance.findOneAndUpdate(
+      { classid, date: { $gte: currentDate }, session },
+      { $push: { attendance: { $each: attendance } } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    res.status(201).json({
+      message: "Attendance report created/updated successfully",
+      data: updatedAttendance,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error creating/updating attendance report",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createclassroom,
+  getclassroom,
+  getclass,
+  createattendancereport,
+};

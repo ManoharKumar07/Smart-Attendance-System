@@ -10,9 +10,6 @@ const cors = require("cors");
 app.use(cors());
 
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.status(200).send("Welcome to thapa technical Mern Series Updated");
-});
 
 app.use("/api/auth/", router);
 app.use("/api/user/", userrouter);
