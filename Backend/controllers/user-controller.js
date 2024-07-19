@@ -86,8 +86,11 @@ const createattendancereport = async (req, res) => {
     currentDate.setHours(0, 0, 0, 0);
 
     const updatedAttendance = await Attendance.findOneAndUpdate(
-      { classid, date: { $gte: currentDate }, session },
-      { $push: { attendance: { $each: attendance } } },
+      { classid, date: currentDate, session },
+      {
+        $addToSet: { attendance: { $each: attendance } },
+        $setOnInsert: { date: currentDate, classid, session },
+      },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
 
@@ -103,9 +106,34 @@ const createattendancereport = async (req, res) => {
   }
 };
 
+const getreportlength = async (req, res) => {
+  try {
+    const { classid } = req.body;
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const report = await Attendance.find({
+      classid,
+      date: { $gte: currentDate },
+    });
+
+    res.status(201).json({
+      message: "Attendance report length fetched successfully",
+      data: report.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "cant find length",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createclassroom,
   getclassroom,
   getclass,
   createattendancereport,
+  getreportlength,
 };

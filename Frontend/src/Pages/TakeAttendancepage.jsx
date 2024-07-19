@@ -13,12 +13,67 @@ const TakeAttendancepage = () => {
   const [classroomName, setClassroomName] = useState("");
   const [students, setStudents] = useState([]);
   const [fetchingStudents, setFetchingStudents] = useState(false);
+
+  // attendance report
+  const [allstudents, setallStudents] = useState([]);
+  const [reportlength, setReportLength] = useState(1);
   const webcamRef = useRef(null);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/user/student/getstudentenr",
+        {
+          classid: id,
+        }
+      );
+
+      setallStudents(response.data.data);
+      console.log("Fetched students:", allstudents);
+    } catch (error) {
+      console.error("Error fetching students", error);
+    }
+  };
+
+  useEffect(() => {
+    const createattendancereport = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/user/createattendancereport",
+          { classid: id, session: 1, attendance: allstudents }
+        );
+        console.log("First session report created");
+      } catch (error) {
+        console.log("Error creating attendance document:", error);
+      }
+    };
+    createattendancereport();
+  }, [allstudents]);
+
   const videoConstraints = {
     width: 640,
     height: 480,
     facingMode: "user",
   };
+  useEffect(() => {
+    const lengthreport = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/user/getreportlength",
+          { id }
+        );
+
+        setReportLength(response.data.data);
+      } catch (error) {
+        console.log("Error in fetchin report length", error);
+      }
+    };
+    lengthreport();
+  }, [isWebcamOn]);
 
   useEffect(() => {
     const fetchClassroomName = async () => {
@@ -107,6 +162,10 @@ const TakeAttendancepage = () => {
     }
   }, [isWebcamOn]);
 
+  const calltwofunc = () => {
+    toggleWebcam();
+  };
+
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
       <h1 className="text-2xl font-bold  text-white  mb-24 mt-40">
@@ -145,7 +204,7 @@ const TakeAttendancepage = () => {
               </div>
             )}
             <button
-              onClick={toggleWebcam}
+              onClick={calltwofunc}
               className="px-4 py-2 mb-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
             >
               {isWebcamOn ? "Turn Off Webcam" : "Turn On Camera"}

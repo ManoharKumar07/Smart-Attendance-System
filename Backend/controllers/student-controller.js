@@ -42,4 +42,17 @@ const getstudents = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-module.exports = { getstudents, addstudent };
+const getstudentenr = async (req, res) => {
+  const { classid } = req.body;
+
+  try {
+    const students = await Student.find({ classid }).select(
+      "email name roll_number"
+    );
+    res.status(200).json({ data: students });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+module.exports = { getstudents, addstudent, getstudentenr };
