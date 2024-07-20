@@ -15,6 +15,7 @@ import { usercontext } from "./context/user-context";
 import { useState } from "react";
 import ClassRoomDetails from "./Pages/ClassRoomDetails";
 import TakeAttendancepage from "./Pages/TakeAttendancepage";
+import AttendanceDetailspage from "./Pages/AttendanceDetailspage";
 
 function App() {
   const [user, setUser] = useState({
@@ -40,6 +41,10 @@ function App() {
             <Route
               path="/viewattendancepage/:id"
               element={<ViewAttendancepage />}
+            />
+            <Route
+              path="/viewattendancepage/:id/:date"
+              element={<AttendanceDetailspage />}
             />
             <Route path="/yourclassroom/:id" element={<ClassRoomDetails />} />
             <Route

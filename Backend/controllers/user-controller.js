@@ -183,6 +183,28 @@ const getattendacereport = async (req, res) => {
   }
 };
 
+const getspecificreport = async (req, res) => {
+  const { classid, date } = req.body;
+
+  try {
+    // Find attendance records matching the classid and the specific date
+    const attendanceRecords = await Attendance.find({ classid, date });
+
+    if (attendanceRecords.length > 0) {
+      res.status(200).json(attendanceRecords);
+    } else {
+      res
+        .status(404)
+        .json({
+          message: "No attendance records found for the given classid and date",
+        });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createclassroom,
   getclassroom,
@@ -191,4 +213,5 @@ module.exports = {
   getreportlength,
   updatereport,
   getattendacereport,
+  getspecificreport,
 };

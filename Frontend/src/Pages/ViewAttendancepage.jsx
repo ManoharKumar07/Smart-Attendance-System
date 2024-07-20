@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import "../styles/viewAttendancepage.css";
 
 const ViewAttendancePage = () => {
@@ -62,12 +62,11 @@ const ViewAttendancePage = () => {
                 <h2 className="text-xl font-semibold min-w-96">
                   {new Date(record.date).toLocaleDateString()}
                 </h2>
-                <button
-                  className="view-button bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={() => handleDateClick(record.date)}
-                >
-                  View
-                </button>
+                <div className="view-button bg-blue-500 text-white px-4 py-2 rounded">
+                  <Link to={`/viewattendancepage/${id}/${record.date}`}>
+                    View
+                  </Link>
+                </div>
               </div>
             ))
           )}
