@@ -19,10 +19,13 @@ const TakeAttendancepage = () => {
   const [reportlength, setReportLength] = useState(1);
   const webcamRef = useRef(null);
 
+  // updating attendance report
+
   useEffect(() => {
     fetchStudents();
   }, []);
 
+  // fetching all students of class to create attendance once page loaded
   const fetchStudents = async () => {
     try {
       const response = await axios.post(
@@ -39,6 +42,7 @@ const TakeAttendancepage = () => {
     }
   };
 
+  // creating attendance report once all students are fetched means all student usestate updated
   useEffect(() => {
     const createattendancereport = async () => {
       try {
@@ -59,6 +63,8 @@ const TakeAttendancepage = () => {
     height: 480,
     facingMode: "user",
   };
+
+  //getting the length of the attendance report of that particular date to get to know session number to mark attendance
   useEffect(() => {
     const lengthreport = async () => {
       try {

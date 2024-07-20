@@ -7,5 +7,6 @@ router.post("/getclassroom", usercontroller.getclassroom);
 router.post("/getclass", usercontroller.getclass);
 router.post("/createattendancereport", usercontroller.createattendancereport);
 router.post("/getreportlength", usercontroller.getreportlength);
+router.post("/updatereport", usercontroller.updatereport);
 
 module.exports = router;

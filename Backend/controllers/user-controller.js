@@ -130,10 +130,41 @@ const getreportlength = async (req, res) => {
   }
 };
 
+const updatereport = async (req, res) => {
+  try {
+    const { classid, session, email } = req.body;
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const updatedAttendance = await Attendance.findOneAndUpdate(
+      { classid, date: currentDate, session, "attendance.email": email },
+      { $set: { "attendance.$.status": true } },
+      { new: true }
+    );
+
+    if (!updatedAttendance) {
+      return res.status(404).json({ message: "Attendance record not found" });
+    }
+
+    res.status(200).json({
+      message: "Attendance status updated successfully",
+      data: updatedAttendance,
+    });
+  } catch (error) {
+    console.error("Error updating attendance status", error);
+    res.status(500).json({
+      message: "Error updating attendance status",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createclassroom,
   getclassroom,
   getclass,
   createattendancereport,
   getreportlength,
+  updatereport,
 };
