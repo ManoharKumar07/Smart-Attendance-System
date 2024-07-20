@@ -19,6 +19,7 @@ const TakeAttendancepage = () => {
   const [allstudents, setallStudents] = useState([]);
   const [reportlength, setReportLength] = useState(1);
   const webcamRef = useRef(null);
+  const [shouldCreateDocument, setShouldCreateDocument] = useState(false);
 
   // updating attendance report
   useEffect(() => {
@@ -199,7 +200,32 @@ const TakeAttendancepage = () => {
   const calltwofunc = () => {
     toggleWebcam();
   };
+  // function to create new attendance document
+  const createnewattendancedocument = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/user/createattendancereport",
+        { classid: id, session: reportlength, attendance: allstudents }
+      );
+      setFetchingStudents(true);
+      setIsReportCreated(true);
+      console.log("First session report created");
+    } catch (error) {
+      console.log("Error creating attendance document:", error);
+    }
+  };
+  useEffect(() => {
+    if (shouldCreateDocument) {
+      createnewattendancedocument();
+      setShouldCreateDocument(false); // Reset the flag
+    }
+  }, [shouldCreateDocument]);
 
+  const takenewattendance = async () => {
+    setStudents([]);
+    await setReportLength((prevLength) => prevLength + 1);
+    setShouldCreateDocument(true);
+  };
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
       <h1 className="text-2xl font-bold text-white mb-24 mt-40">
@@ -241,6 +267,12 @@ const TakeAttendancepage = () => {
               className="px-4 py-2 mb-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
             >
               {isWebcamOn ? "Turn Off Webcam" : "Turn On Camera"}
+            </button>
+            <button
+              onClick={takenewattendance}
+              className="px-4 py-2 mb-4 ml-6 bg-green-500 text-white rounded hover:bg-blue-600 transition duration-200"
+            >
+              Take new Attendance
             </button>
             {isWebcamOn && (
               <>
