@@ -1,0 +1,56 @@
+.attendance-page-content {
+  background-color: var(--dark-color);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-inline: auto;
+  min-height: 580px;
+}
+
+.attendance-list {
+  margin-top: 16px;
+}
+
+.attendance-item {
+  padding: 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  color: white;
+}
+
+.attendance-item:hover {
+  background-color: rgb(70, 67, 67);
+}
+
+.text-red-500 {
+  color: #f56565;
+}
+
+.text-gray-500 {
+  color: #a0aec0;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-36 {
+  margin-top: 9rem;
+}
+h2 {
+  width: 700px;
+}

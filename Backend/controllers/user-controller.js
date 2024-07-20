@@ -159,6 +159,29 @@ const updatereport = async (req, res) => {
     });
   }
 };
+const getattendacereport = async (req, res) => {
+  try {
+    const { classid } = req.body;
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const report = await Attendance.find({
+      classid,
+      date: { $gte: currentDate },
+    });
+
+    res.status(201).json({
+      message: "Attendance report length fetched successfully",
+      reports: report,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Can't find length",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createclassroom,
@@ -167,4 +190,5 @@ module.exports = {
   createattendancereport,
   getreportlength,
   updatereport,
+  getattendacereport,
 };

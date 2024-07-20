@@ -38,7 +38,7 @@ function App() {
             <Route path="/createclassroom" element={<CreateClassroom />} />
             <Route path="/contact" element={<Contact />} />
             <Route
-              path="/viewattendancepage"
+              path="/viewattendancepage/:id"
               element={<ViewAttendancepage />}
             />
             <Route path="/yourclassroom/:id" element={<ClassRoomDetails />} />

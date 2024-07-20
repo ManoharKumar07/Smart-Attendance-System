@@ -43,7 +43,7 @@ const YourClassroom = () => {
                 </p>
               </div>
               <div className="card-actions space-x-5">
-                <Link to={"/viewattendancepage"}>
+                <Link to={`/viewattendancepage/${classroom._id}`}>
                   <Button type="primary">View Attendance</Button>
                 </Link>
                 <Link
