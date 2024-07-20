@@ -13,6 +13,7 @@ const TakeAttendancepage = () => {
   const [classroomName, setClassroomName] = useState("");
   const [students, setStudents] = useState([]);
   const [fetchingStudents, setFetchingStudents] = useState(false);
+  const [isReportCreated, setIsReportCreated] = useState(false);
 
   // attendance report
   const [allstudents, setallStudents] = useState([]);
@@ -20,7 +21,6 @@ const TakeAttendancepage = () => {
   const webcamRef = useRef(null);
 
   // updating attendance report
-
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -36,7 +36,8 @@ const TakeAttendancepage = () => {
       );
 
       setallStudents(response.data.data);
-      console.log("Fetched students:", allstudents);
+      setIsReportCreated(false);
+      console.log("Fetched students:", response.data.data);
     } catch (error) {
       console.error("Error fetching students", error);
     }
@@ -50,6 +51,8 @@ const TakeAttendancepage = () => {
           "http://localhost:5000/api/user/createattendancereport",
           { classid: id, session: 1, attendance: allstudents }
         );
+        setFetchingStudents(true);
+        setIsReportCreated(true);
         console.log("First session report created");
       } catch (error) {
         console.log("Error creating attendance document:", error);
@@ -66,21 +69,46 @@ const TakeAttendancepage = () => {
 
   //getting the length of the attendance report of that particular date to get to know session number to mark attendance
   useEffect(() => {
+    if (!isReportCreated) return;
+
     const lengthreport = async () => {
       try {
+        console.log("Fetching report length for id:", id);
         const response = await axios.post(
           "http://localhost:5000/api/user/getreportlength",
-          { id }
+          { classid: id }
         );
-
-        setReportLength(response.data.data);
+        console.log("Reports", response.data.reports);
+        if (response.data.reports && Array.isArray(response.data.reports)) {
+          setReportLength(response.data.reports.length);
+        }
       } catch (error) {
-        console.log("Error in fetchin report length", error);
+        console.log("Error in fetching report length", error);
       }
     };
-    lengthreport();
-  }, [isWebcamOn]);
 
+    lengthreport();
+  }, [isReportCreated]);
+
+  // Updating the attendance of latest session (using reportlength) once student is recognised by the ml model (detected email)
+  useEffect(() => {
+    const markpresent = async () => {
+      if (!detectedEmail) return;
+      try {
+        console.log(id, reportlength, detectedEmail);
+        const response = await axios.post(
+          "http://localhost:5000/api/user/updatereport",
+          { classid: id, session: reportlength, email: detectedEmail }
+        );
+        console.log(response.data.message);
+      } catch (error) {
+        console.log("Can't mark attendance ", error);
+      }
+    };
+    markpresent();
+  }, [detectedEmail, reportlength]);
+
+  // Fetching classroom name
   useEffect(() => {
     const fetchClassroomName = async () => {
       try {
@@ -174,7 +202,7 @@ const TakeAttendancepage = () => {
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
-      <h1 className="text-2xl font-bold  text-white  mb-24 mt-40">
+      <h1 className="text-2xl font-bold text-white mb-24 mt-40">
         Take Attendance
       </h1>
       <div className="flex flex-row justify-center items-start space-x-40 min-h-96 mb-80">
@@ -189,7 +217,6 @@ const TakeAttendancepage = () => {
                 </li>
               ))}
             </ul>
-            {fetchingStudents && <p>Loading students...</p>}
           </div>
         </div>
 

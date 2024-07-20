@@ -120,11 +120,11 @@ const getreportlength = async (req, res) => {
 
     res.status(201).json({
       message: "Attendance report length fetched successfully",
-      data: report.length,
+      reports: report,
     });
   } catch (error) {
     res.status(500).json({
-      message: "cant find length",
+      message: "Can't find length",
       error: error.message,
     });
   }
