@@ -18,11 +18,11 @@ const ViewAttendancePage = () => {
         );
 
         // Filter out duplicate dates
-        const uniqueDates = {};
+        const uniqueDates = new Set();
         const filteredReports = response.data.reports.filter((report) => {
           const date = new Date(report.date).toLocaleDateString();
-          if (!uniqueDates[date]) {
-            uniqueDates[date] = true;
+          if (!uniqueDates.has(date)) {
+            uniqueDates.add(date);
             return true;
           }
           return false;

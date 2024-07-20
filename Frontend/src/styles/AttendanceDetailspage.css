@@ -1,0 +1,29 @@
+.attendance-details-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.session-report {
+  margin-bottom: 40px;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.attendance-table th,
+.attendance-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.attendance-table th {
+  background-color: var(--bg-color);
+  font-weight: bold;
+  color: black;
+}
