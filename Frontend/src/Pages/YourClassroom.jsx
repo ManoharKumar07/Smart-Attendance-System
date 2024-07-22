@@ -46,10 +46,7 @@ const YourClassroom = () => {
                 <Link to={`/viewattendancepage/${classroom._id}`}>
                   <Button type="primary">View Attendance</Button>
                 </Link>
-                <Link
-                  to={`/yourclassroom/takeattendance/${classroom._id}`}
-                  classname={classroom.classname}
-                >
+                <Link to={`/yourclassroom/takeattendance/${classroom._id}`}>
                   <Button type="primary">Take Attendance</Button>
                 </Link>
               </div>
