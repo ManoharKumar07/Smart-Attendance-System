@@ -78,6 +78,7 @@ const getclass = async (req, res) => {
   }
 };
 
+// WHEN THE TAKE ATTENDANCE PAGE IS LOADED
 const createattendancereport = async (req, res) => {
   try {
     const { classid, attendance, session } = req.body;
@@ -106,6 +107,7 @@ const createattendancereport = async (req, res) => {
   }
 };
 
+//LENGTH IS USED TO TRACK THE NUMBER OF THE SESSION
 const getreportlength = async (req, res) => {
   try {
     const { classid } = req.body;
@@ -160,6 +162,8 @@ const getreportlength = async (req, res) => {
 //   }
 // };
 
+//IT IS TO ATTENDANCE AS PRESENT WHEN STUDENT IS PREDICTED
+
 const updatereport = async (req, res) => {
   const { classid, session, email } = req.body;
 
@@ -210,6 +214,7 @@ const updatereport = async (req, res) => {
   }
 };
 
+//TO MAP ALL ATTENDANCE REPORT WITH DATE AS TITLE IN VIEW ATTENDANCE PAGE
 const getattendacereport = async (req, res) => {
   try {
     const { classid } = req.body;
@@ -230,6 +235,7 @@ const getattendacereport = async (req, res) => {
   }
 };
 
+// TO DISPLAY THE REPORT FOR THE SPECIFIC DATE WHEN USER CLICK ON VIEW BUTTON
 const getspecificreport = async (req, res) => {
   const { classid, date } = req.body;
 

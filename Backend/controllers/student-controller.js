@@ -1,6 +1,6 @@
 const Student = require("../models/student-model");
 
-// Controller to add a student
+// Controller to add a student  CLASSROOM DETAIL PAGE TAB
 const addstudent = async (req, res) => {
   const { name, email, classid, roll_number } = req.body;
 
