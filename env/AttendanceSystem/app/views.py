@@ -183,8 +183,11 @@ def DetectFace(request):
             if len(faces) == 0:
                 return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
 
+            if not names:  # Check if names array is empty
+                return Response({"name": "Not a Student of this Class"}, status=status.HTTP_200_OK)
+
             for (x, y, w, h) in faces:
-                face = gray[y:y + h, x + w]
+                face = gray[y:y + h, x:x + w]
                 face_resize = cv2.resize(face, (130, 100))
 
                 prediction = model.predict(face_resize)
@@ -200,7 +203,7 @@ def DetectFace(request):
                     return Response({"name": name, "roll_number": roll_number, "email": email}, status=status.HTTP_200_OK)
                 else:
                     print("Unknown face detected with high confidence.")
-                    return Response({"name": "Unknown"}, status=status.HTTP_200_OK)
+                    return Response({"name": "Not Student of this Class"}, status=status.HTTP_200_OK)
 
             return Response({"name": "No face detected"}, status=status.HTTP_200_OK)
 
@@ -210,4 +213,3 @@ def DetectFace(request):
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
