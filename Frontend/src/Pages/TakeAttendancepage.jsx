@@ -221,14 +221,15 @@ const TakeAttendancepage = () => {
     }
   }, [shouldCreateDocument]);
 
+  // TO CREATE NEW ATTENDANCE REPORT FOR ONE MORE SESSION
   const takenewattendance = async () => {
     setStudents([]);
     setReportLength((prevLength) => prevLength + 1);
 
-    // Delay setting shouldCreateDocument by 2 seconds
+    // Making delay in calling to ensure that attendance report is created only after the session length is created
     setTimeout(() => {
       setShouldCreateDocument(true);
-    }, 3000); // 2000 milliseconds = 2 seconds
+    }, 3500);
   };
 
   return (
