@@ -223,9 +223,14 @@ const TakeAttendancepage = () => {
 
   const takenewattendance = async () => {
     setStudents([]);
-    await setReportLength((prevLength) => prevLength + 1);
-    setShouldCreateDocument(true);
+    setReportLength((prevLength) => prevLength + 1);
+
+    // Delay setting shouldCreateDocument by 2 seconds
+    setTimeout(() => {
+      setShouldCreateDocument(true);
+    }, 3000); // 2000 milliseconds = 2 seconds
   };
+
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
       <h1 className="text-2xl font-bold text-white mb-24 mt-40">
