@@ -1,4 +1,4 @@
-# face_recognition_model.py
+# face_recognition_model.py for training model
 import cv2
 import numpy as np
 import os
